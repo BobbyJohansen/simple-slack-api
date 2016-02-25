@@ -1,10 +1,7 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackBot;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -178,13 +175,14 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, boolean unfurl)
     {
-        return sendMessage(channel, message, attachment, DEFAULT_CONFIGURATION, unfurl);
+
+        return sendMessage(channel, message, Arrays.asList(attachment), DEFAULT_CONFIGURATION, unfurl);
     }
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
     {
-        return sendMessage(channel, message, attachment, chatConfiguration, DEFAULT_UNFURL);
+        return sendMessage(channel, message, Arrays.asList(attachment), chatConfiguration, DEFAULT_UNFURL);
     }
 
     @Override
