@@ -441,7 +441,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments, SlackChatConfiguration chatConfiguration, boolean unfurl)
     {
         SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         Map<String, String> arguments = new HashMap<>();
@@ -464,9 +464,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         {
             arguments.put("username", chatConfiguration.userName);
         }
-        if (attachment != null)
+        if (attachments != null)
         {
-            arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachment).toString());
+            arguments.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachments.toArray(new SlackAttachment[attachments.size()])).toString());
         }
         if (!unfurl)
         {
@@ -674,7 +674,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
+    public SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message, List<SlackAttachment> attachments)
     {
         SlackMessageHandleImpl<SlackMessageReply> handle = new SlackMessageHandleImpl<SlackMessageReply>(getNextMessageId());
         try
@@ -683,9 +683,9 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
             messageJSON.put("type", "message");
             messageJSON.put("channel", channel.getId());
             messageJSON.put("text", message);
-            if (attachment != null)
+            if (attachments != null)
             {
-                messageJSON.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachment));
+                messageJSON.put("attachments", SlackJSONAttachmentFormatter.encodeAttachments(attachments.toArray(new SlackAttachment[attachments.size()])));
             }
             websocketSession.getBasicRemote().sendText(messageJSON.toJSONString());
         }

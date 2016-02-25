@@ -14,6 +14,8 @@ import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
+import java.util.List;
+
 public class TestAbstractSlackSessionImpl
 {
 
@@ -49,13 +51,13 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
+        public SlackMessageHandle sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments, SlackChatConfiguration chatConfiguration, boolean unfurl)
         {
             return null;
         }
 
         @Override
-        public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
+        public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, List<SlackAttachment> attachments)
         {
             return null;
         }
