@@ -161,6 +161,12 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments)
+    {
+        return sendMessage(channel, message, attachments, DEFAULT_CONFIGURATION);
+    }
+
+    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message)
     {
         return sendMessage(channel, message, DEFAULT_UNFURL);
@@ -182,7 +188,13 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
     {
-        return sendMessage(channel, message, Arrays.asList(attachment), chatConfiguration, DEFAULT_UNFURL);
+        return sendMessage(channel, message, attachment == null ? null : Arrays.asList(attachment), chatConfiguration, DEFAULT_UNFURL);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments, SlackChatConfiguration chatConfiguration)
+    {
+        return sendMessage(channel, message, attachments, chatConfiguration, DEFAULT_UNFURL);
     }
 
     @Override

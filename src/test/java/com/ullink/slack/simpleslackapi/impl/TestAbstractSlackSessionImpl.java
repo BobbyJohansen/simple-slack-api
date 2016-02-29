@@ -1,6 +1,8 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import org.junit.Test;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -144,6 +146,11 @@ public class TestAbstractSlackSessionImpl
 
         @Override
         public SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, List<SlackAttachment> attachments) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
