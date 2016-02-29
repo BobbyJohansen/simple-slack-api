@@ -1,6 +1,8 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import org.junit.Test;
 import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackChannel;
@@ -13,6 +15,8 @@ import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
 import com.ullink.slack.simpleslackapi.replies.SlackReply;
+
+import java.util.List;
 
 public class TestAbstractSlackSessionImpl
 {
@@ -49,13 +53,13 @@ public class TestAbstractSlackSessionImpl
         }
 
         @Override
-        public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
+        public SlackMessageHandle sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments, SlackChatConfiguration chatConfiguration, boolean unfurl)
         {
             return null;
         }
 
         @Override
-        public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment)
+        public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, List<SlackAttachment> attachments)
         {
             return null;
         }
@@ -142,6 +146,11 @@ public class TestAbstractSlackSessionImpl
 
         @Override
         public SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, List<SlackAttachment> attachments) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 

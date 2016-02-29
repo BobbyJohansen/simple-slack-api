@@ -1,7 +1,10 @@
 package com.ullink.slack.simpleslackapi.impl;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+
+import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
 import org.assertj.core.api.Assertions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -81,12 +84,12 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl) {
+            public SlackMessageHandle sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments, SlackChatConfiguration chatConfiguration, boolean unfurl) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, SlackAttachment attachment) {
+            public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, List<SlackAttachment> attachments) {
                 throw new UnsupportedOperationException();
             }
 
@@ -150,6 +153,11 @@ public class TestSlackJSONMessageParser {
 
             @Override
             public SlackMessageHandle sendMessageToUser(SlackUser user, String message, SlackAttachment attachment) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, List<SlackAttachment> attachments) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
 
