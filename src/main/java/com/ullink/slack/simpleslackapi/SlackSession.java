@@ -83,6 +83,8 @@ public interface SlackSession {
 
     SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message, List<SlackAttachment> attachments);
 
+    SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel);
+
     SlackMessageHandle<SlackMessageReply> addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode);
 
     SlackMessageHandle<SlackChannelReply> joinChannel(String channelName);
