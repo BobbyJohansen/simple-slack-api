@@ -6,6 +6,7 @@ import com.ullink.slack.simpleslackapi.replies.*;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +31,8 @@ public interface SlackSession {
     SlackPersona sessionPersona();
 
     SlackMessageHandle<EmojiSlackReply> listEmoji();
+
+    void refetchUsers();
 
     @Deprecated
     SlackBot findBotById(String botId);

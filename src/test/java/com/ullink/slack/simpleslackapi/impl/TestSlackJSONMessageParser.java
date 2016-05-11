@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -143,6 +144,10 @@ public class TestSlackJSONMessageParser {
             @Override
             public SlackMessageHandle<EmojiSlackReply> listEmoji() {
                 return null;
+            }
+
+            @Override
+            public void refetchUsers() {
             }
 
             @Override

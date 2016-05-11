@@ -6,6 +6,7 @@ import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
 import com.ullink.slack.simpleslackapi.replies.*;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -117,6 +118,10 @@ public class TestAbstractSlackSessionImpl
         @Override
         public SlackMessageHandle<EmojiSlackReply> listEmoji() {
             return null;
+        }
+
+        @Override
+        public void refetchUsers() {
         }
 
         @Override
