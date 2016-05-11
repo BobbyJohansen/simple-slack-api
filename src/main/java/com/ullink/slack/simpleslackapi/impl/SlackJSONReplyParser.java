@@ -1,39 +1,49 @@
 package com.ullink.slack.simpleslackapi.impl;
 
+import com.ullink.slack.simpleslackapi.replies.ParsedSlackReply;
 import org.json.simple.JSONObject;
 import com.ullink.slack.simpleslackapi.SlackSession;
 import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
-import com.ullink.slack.simpleslackapi.replies.SlackReply;
 
 class SlackJSONReplyParser
 {
-    static SlackReply decode(JSONObject obj, SlackSession session)
+    static ParsedSlackReply decode(JSONObject obj, SlackSession session)
     {
         Boolean ok = (Boolean) obj.get("ok");
+        String error = (String) obj.get("error");
 
         String presence = (String)obj.get("presence");
         if (presence != null) {
-            return new SlackUserPresenceReplyImpl(ok, "active".equals(presence));
+            return new SlackUserPresenceReplyImpl(ok, error,"active".equals(presence));
         }
 
         if (isMpim(obj) || isIm(obj) || isChannel(obj) || isGroup(obj)) {
-            return buildSlackChannelReply(ok,obj,session);
+            return buildSlackChannelReply(ok,error,obj,session);
         }
 
         if(isMessageReply(obj)) {
             Long replyTo = (Long) obj.get("reply_to");
             String timestamp = (String) obj.get("ts");
-            return new SlackMessageReplyImpl(ok, obj, replyTo != null ? replyTo : -1, timestamp);
+            return new SlackMessageReplyImpl(ok, error, obj, replyTo != null ? replyTo : -1, timestamp);
         }
 
-        return new GenericSlackReplyImpl(obj);
+        if (isEmojiReply(obj)) {
+            String timestamp = (String) obj.get("cache_ts");
+            return new SlackEmojiReplyImpl(ok, error, SlackJSONMessageParser.extractEmojisFromMessageJSON((JSONObject) obj.get("emoji")), timestamp);
+        }
+
+        if (ok == null) {
+            //smelly reply
+            ok = Boolean.FALSE;
+        }
+        return new SlackReplyImpl(ok,error);
     }
 
-    private static SlackChannelReply buildSlackChannelReply(Boolean ok, JSONObject obj, SlackSession session) 
+    private static SlackChannelReply buildSlackChannelReply(Boolean ok, String error, JSONObject obj, SlackSession session)
     {
         String id = (String)obj.get("id");
         if (id != null) {
-            return new SlackChannelReplyImpl(ok,obj, session.findChannelById(id));
+            return new SlackChannelReplyImpl(ok,error,obj, session.findChannelById(id));
         }
 
         JSONObject channelObj = (JSONObject) obj.get("channel");
@@ -42,12 +52,12 @@ class SlackJSONReplyParser
         }
 
         id = (String)channelObj.get("id");
-        return new SlackChannelReplyImpl(ok,obj, session.findChannelById(id));
+        return new SlackChannelReplyImpl(ok,error,obj, session.findChannelById(id));
     }
 
     private static boolean isMessageReply(JSONObject obj)
     {
-        return obj.get("reply_to") != null;
+        return obj.get("ts") != null;
     }
     
     private static boolean isMpim(JSONObject obj)
@@ -77,6 +87,11 @@ class SlackJSONReplyParser
 
         Object group = obj.get("group");
         return group != null && group instanceof JSONObject;
+    }
+
+    private static boolean isEmojiReply(JSONObject obj) {
+        Object emoji = obj.get("emoji");
+        return emoji != null && emoji instanceof JSONObject;
     }
 
 }

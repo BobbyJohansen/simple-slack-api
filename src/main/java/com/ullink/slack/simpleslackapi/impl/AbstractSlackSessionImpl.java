@@ -1,31 +1,10 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.util.*;
-
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackBot;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackTeam;
-import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.listeners.PinAddedListener;
-import com.ullink.slack.simpleslackapi.listeners.PinRemovedListener;
-import com.ullink.slack.simpleslackapi.listeners.ReactionAddedListener;
-import com.ullink.slack.simpleslackapi.listeners.ReactionRemovedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelArchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelCreatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelRenamedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackChannelUnarchivedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackConnectedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackGroupJoinedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageDeletedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessagePostedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackMessageUpdatedListener;
-import com.ullink.slack.simpleslackapi.listeners.SlackUserChangeListener;
+import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.listeners.*;
 import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+
+import java.util.*;
 
 abstract class AbstractSlackSessionImpl implements SlackSession
 {
@@ -50,6 +29,7 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     protected List<SlackUserChangeListener>        slackUserChangeListener  = new ArrayList<>();
     protected List<PinAddedListener>               pinAddedListener         = new ArrayList<>();
     protected List<PinRemovedListener>             pinRemovedListener       = new ArrayList<>();
+    protected List<SlackDisconnectedListener> slackDisconnectedListener = new ArrayList<>();
 
     static final SlackChatConfiguration            DEFAULT_CONFIGURATION    = SlackChatConfiguration.getConfiguration().asUser();
     static final boolean                           DEFAULT_UNFURL           = true;
@@ -161,12 +141,6 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments)
-    {
-        return sendMessage(channel, message, attachments, DEFAULT_CONFIGURATION);
-    }
-
-    @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message)
     {
         return sendMessage(channel, message, DEFAULT_UNFURL);
@@ -181,20 +155,30 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, boolean unfurl)
     {
-
-        return sendMessage(channel, message, Arrays.asList(attachment), DEFAULT_CONFIGURATION, unfurl);
+        return sendMessage(channel, message, attachment, DEFAULT_CONFIGURATION, unfurl);
     }
 
     @Override
     public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration)
     {
-        return sendMessage(channel, message, attachment == null ? null : Arrays.asList(attachment), chatConfiguration, DEFAULT_UNFURL);
+        return sendMessage(channel, message, attachment, chatConfiguration, DEFAULT_UNFURL);
     }
 
     @Override
-    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments, SlackChatConfiguration chatConfiguration)
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage) {
+        return sendMessage(channel, preparedMessage, DEFAULT_CONFIGURATION);
+    }
+
+    @Override
+    public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, String message, SlackAttachment attachment, SlackChatConfiguration chatConfiguration, boolean unfurl)
     {
-        return sendMessage(channel, message, attachments, chatConfiguration, DEFAULT_UNFURL);
+        SlackPreparedMessage preparedMessage = new SlackPreparedMessage.Builder()
+                .withMessage(message)
+                .withUnfurl(unfurl)
+                .addAttachment(attachment)
+                .build();
+
+        return sendMessage(channel, preparedMessage, chatConfiguration);
     }
 
     @Override
@@ -315,6 +299,16 @@ abstract class AbstractSlackSessionImpl implements SlackSession
     public void removeSlackConnectedListener(SlackConnectedListener listener)
     {
         slackConnectedListener.remove(listener);
+    }
+
+    @Override
+    public void addSlackDisconnectedListener(SlackDisconnectedListener listener) {
+        slackDisconnectedListener.add(listener);
+    }
+
+    @Override
+    public void removeSlackDisconnectedListener(SlackDisconnectedListener listener) {
+        slackDisconnectedListener.remove(listener);
     }
 
     @Override
