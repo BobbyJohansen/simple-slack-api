@@ -1,10 +1,8 @@
 package com.ullink.slack.simpleslackapi.impl;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import com.ullink.slack.simpleslackapi.replies.SlackMessageReply;
+import com.ullink.slack.simpleslackapi.*;
+import com.ullink.slack.simpleslackapi.events.*;
+import com.ullink.slack.simpleslackapi.replies.*;
 import org.assertj.core.api.Assertions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,26 +10,11 @@ import org.json.simple.parser.ParseException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import com.ullink.slack.simpleslackapi.SlackAttachment;
-import com.ullink.slack.simpleslackapi.SlackChannel;
-import com.ullink.slack.simpleslackapi.SlackMessageHandle;
-import com.ullink.slack.simpleslackapi.SlackPersona;
-import com.ullink.slack.simpleslackapi.SlackSession;
-import com.ullink.slack.simpleslackapi.SlackUser;
-import com.ullink.slack.simpleslackapi.events.ReactionAdded;
-import com.ullink.slack.simpleslackapi.events.ReactionRemoved;
-import com.ullink.slack.simpleslackapi.events.SlackChannelArchived;
-import com.ullink.slack.simpleslackapi.events.SlackChannelCreated;
-import com.ullink.slack.simpleslackapi.events.SlackChannelDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackChannelUnarchived;
-import com.ullink.slack.simpleslackapi.events.SlackEvent;
-import com.ullink.slack.simpleslackapi.events.SlackGroupJoined;
-import com.ullink.slack.simpleslackapi.events.SlackMessageDeleted;
-import com.ullink.slack.simpleslackapi.events.SlackMessagePosted;
-import com.ullink.slack.simpleslackapi.events.SlackUserChange;
-import com.ullink.slack.simpleslackapi.replies.GenericSlackReply;
-import com.ullink.slack.simpleslackapi.replies.SlackChannelReply;
-import com.ullink.slack.simpleslackapi.replies.SlackReply;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class TestSlackJSONMessageParser {
 
@@ -59,7 +42,20 @@ public class TestSlackJSONMessageParser {
     @Before
     public void setup() {
         session = new AbstractSlackSessionImpl() {
-            
+
+            @Override
+            public long getHeartbeat() {
+                return 0;
+            }
+
+            @Override
+            public void setHeartbeat(long heartbeat, TimeUnit unit) {
+
+            }
+
+            @Override
+            public void setPresence(SlackPersona.SlackPresence presence) {};
+
             @Override
             public void connect() {
                 SlackUser user1 = new SlackUserImpl("TESTUSER1", "test user 1", "", "", false, false, false, false, false, false, false, "tz", "tzLabel", new Integer(0));
@@ -84,18 +80,13 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle sendMessage(SlackChannel channel, String message, List<SlackAttachment> attachments, SlackChatConfiguration chatConfiguration, boolean unfurl) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message, List<SlackAttachment> attachments) {
+            public SlackMessageHandle sendMessageOverWebSocket(SlackChannel channel, String message) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
             public SlackMessageHandle<SlackMessageReply> sendTyping(SlackChannel channel) {
-                throw new UnsupportedOperationException();
+                    throw new UnsupportedOperationException();
             }
 
             @Override
@@ -106,6 +97,16 @@ public class TestSlackJSONMessageParser {
             @Override
             public SlackMessageHandle deleteMessage(String timeStamp, SlackChannel channel) {
                 return null;
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessage(SlackChannel channel, SlackPreparedMessage preparedMessage, SlackChatConfiguration chatConfiguration) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, SlackPreparedMessage message) {
+                throw new UnsupportedOperationException();
             }
 
             @Override
@@ -141,6 +142,15 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<EmojiSlackReply> listEmoji() {
+                return null;
+            }
+
+            @Override
+            public void refetchUsers() {
+            }
+
+            @Override
             public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
             {
                 return null;
@@ -162,11 +172,6 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle<SlackMessageReply> sendMessageToUser(SlackUser user, String message, List<SlackAttachment> attachments) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            }
-
-            @Override
             public SlackMessageHandle sendMessageToUser(String userName, String message, SlackAttachment attachment) {
                 throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
@@ -178,7 +183,7 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
-            public SlackMessageHandle<SlackReply> archiveChannel(SlackChannel channel)
+            public SlackMessageHandle<ParsedSlackReply> archiveChannel(SlackChannel channel)
             {
                 return null;
             }
