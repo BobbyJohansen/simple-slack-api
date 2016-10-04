@@ -628,17 +628,21 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         String answer = replyEv.getPlainAnswer();
         JsonParser parser = new JsonParser();
         JsonObject answerJson = parser.parse(answer).getAsJsonObject();
-        JsonArray membersjson = answerJson.get("members").getAsJsonArray();
-        Map<String, SlackUser> members = new HashMap<>();
-        if (membersjson != null) {
-            for (JsonElement member : membersjson) {
-                SlackUser user = SlackJSONParsingUtils.buildSlackUser(member.getAsJsonObject());
-                members.put(user.getId(), user);
+        boolean okay = answerJson.get("ok").getAsBoolean();
+        LOGGER.debug("Refetch Users response status: " + Boolean.toString(okay));
+        if(okay) {
+            LOGGER.debug("Updating Users Cache with results of users.list");
+            JsonArray membersjson = answerJson.get("members").getAsJsonArray();
+            Map<String, SlackUser> members = new HashMap<>();
+            if (membersjson != null) {
+                for (JsonElement member : membersjson) {
+                    SlackUser user = SlackJSONParsingUtils.buildSlackUser(member.getAsJsonObject());
+                    members.put(user.getId(), user);
+                }
             }
+            //blindly replace cache
+            users = members;
         }
-
-        //blindly replace cache
-        users = members;
     }
 
     private void postSlackCommand(Map<String, String> params, String command, SlackMessageHandleImpl handle) {
