@@ -21,7 +21,7 @@ apply plugin: 'signing'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
-group = 'com.zeal'
+group = 'io.zealtechnology'
 archivesBaseName = 'simpleslackapi'
 version = '1.0.0-SNAPSHOT'
 
@@ -132,7 +132,7 @@ uploadArchives {
             }
             pom.version = "1.0.0-SNAPSHOT"
             pom.artifactId = "simpleslackapi"
-            pom.groupId = "com.zeal"
+            pom.groupId = "io.zealtechnology"
         }
     }
 }
