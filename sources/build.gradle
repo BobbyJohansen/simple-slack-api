@@ -2,7 +2,7 @@ buildscript {
     repositories {
         repositories {
             maven {
-                url "http://nexus.noreaster.io:8081/nexus/content/groups/public"
+                url "http://aiur.zeal.technology:8081/nexus/content/groups/public"
             }
         }
         mavenCentral()
@@ -21,7 +21,7 @@ apply plugin: 'signing'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
-group = 'io.noreaster'
+group = 'com.zeal'
 archivesBaseName = 'simpleslackapi'
 version = '1.0.0-SNAPSHOT'
 
@@ -127,12 +127,12 @@ publishing {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: "http://nexus.noreaster.io:8081/nexus/content/repositories/snapshots") {
-                authentication(userName: "admin", password: "a.PyQU>RJ:V2^+\"9")
+            repository(url: "http://aiur.zeal.technology:8081/nexus/content/repositories/snapshots") {
+                authentication(userName: "zeratul", password: "carrierhasarrived")
             }
             pom.version = "1.0.0-SNAPSHOT"
             pom.artifactId = "simpleslackapi"
-            pom.groupId = "io.noreaster"
+            pom.groupId = "com.zeal"
         }
     }
 }
