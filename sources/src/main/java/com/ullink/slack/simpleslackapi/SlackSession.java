@@ -42,9 +42,10 @@ public interface SlackSession {
 
     @Deprecated
     SlackBot findBotById(String botId);
-    
 
     SlackMessageHandle<ParsedSlackReply> inviteUser(String email, String firstName, boolean setActive);
+
+    void setEndpoint(String endpoint);
 
     void connect() throws IOException;
 
@@ -77,6 +78,8 @@ public interface SlackSession {
     SlackMessageHandle<SlackMessageReply> sendMessageToUser(String userName, String message, SlackAttachment attachment);
     
     SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, SlackChannel channel, String message);
+
+    SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, SlackPreparedMessage preparedMessage);
 
     SlackMessageHandle<SlackMessageReply> sendMessageOverWebSocket(SlackChannel channel, String message);
 

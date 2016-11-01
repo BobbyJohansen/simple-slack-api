@@ -11,6 +11,13 @@ public class SlackPreparedMessage {
     private final boolean linkNames;
     private final SlackAttachment[] attachments;
 
+    public SlackPreparedMessage() {
+        attachments = new SlackAttachment[0];
+        linkNames = false;
+        unfurl = false;
+        message = null;
+    }
+
     private SlackPreparedMessage(String message, boolean unfurl, boolean linkNames, SlackAttachment[] attachments) {
         this.message = message;
         this.unfurl = unfurl;

@@ -130,6 +130,11 @@ public class TestSlackJSONMessageParser {
             }
 
             @Override
+            public SlackMessageHandle<SlackMessageReply> updateMessage(String timeStamp, String channelId, SlackPreparedMessage preparedMessage) {
+                return null;
+            }
+
+            @Override
             public SlackMessageHandle addReactionToMessage(SlackChannel channel, String messageTimeStamp, String emojiCode) {
                 return null;
             }
@@ -173,6 +178,11 @@ public class TestSlackJSONMessageParser {
             public SlackMessageHandle inviteUser(String email, String firstName, boolean setActive) 
             {
                 return null;
+            }
+
+            @Override
+            public void setEndpoint(String endpoint) {
+
             }
 
             @Override
