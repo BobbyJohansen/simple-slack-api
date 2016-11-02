@@ -128,7 +128,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: "http://aiur.zeal.technology:8081/nexus/content/repositories/snapshots") {
-                authentication(userName: "zeratul", password: "carrierhasarrived")
+                authentication(userName: "admin", password: "jim-raynor")
             }
             pom.version = "1.0.0-SNAPSHOT"
             pom.artifactId = "simpleslackapi"

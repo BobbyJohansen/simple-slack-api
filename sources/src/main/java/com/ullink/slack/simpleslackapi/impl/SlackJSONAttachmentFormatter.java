@@ -10,7 +10,7 @@ import com.ullink.slack.simpleslackapi.SlackAttachment;
 import com.ullink.slack.simpleslackapi.SlackAction;
 import com.ullink.slack.simpleslackapi.SlackField;
 
-class SlackJSONAttachmentFormatter
+public class SlackJSONAttachmentFormatter
 {
     public static List<JsonObject> encodeAttachments(SlackAttachment... attachments)
     {
