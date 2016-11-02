@@ -524,7 +524,7 @@ class SlackWebSocketSessionImpl extends AbstractSlackSessionImpl implements Slac
         arguments.put("ts", timeStamp);
         arguments.put("channel", channelId);
         arguments.put("text", preparedMessage.getMessage());
-        if (preparedMessage.getAttachments() != null && preparedMessage.getAttachments().length > 0)
+        if (preparedMessage.getAttachments() != null)
         {
             arguments.put("attachments", SlackJSONAttachmentFormatter
                     .encodeAttachments(preparedMessage.getAttachments()).toString());
